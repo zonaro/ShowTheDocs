@@ -143,11 +143,12 @@
 									:class="item.icon"></i>
 								<span v-if="item.title" v-html="item.title"></span>&nbsp;
 								<small v-if="data.copydialog"> <i style="cursor:pointer;color: gray;font-size: 70%;"
-									class="fa fa-link" :data-copylink="sectionLink(fixId(item.id))"
-									:data-text="data.copydialog"
-									onclick="copyLink(this)"></i></small>
+										class="fa fa-link" :data-copylink="sectionLink(fixId(item.id))"
+										:data-text="data.copydialog" onclick="copyLink(this)"></i></small>
 								<!-- Toast para cópia de link -->
-								<div id="copy-toast" class="alert alert-success" role="alert" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;min-width:200px;text-align:center"></div>
+								<div id="copy-toast" class="alert alert-success" role="alert"
+									style="display:none;position:fixed;top:20px;right:20px;z-index:9999;min-width:200px;text-align:center">
+								</div>
 							</component>
 							<small v-if="item.date && item.date != ''">{{data.datelabel}} {{item.date}}
 								<br />
