@@ -26,7 +26,7 @@ https://your-domain.com/index.html#/<owner>/<repo>/<branch>
 **Example:**
 
 ```
-https://your-domain.com/index.html#/zonaro/ShowTheDocs/main
+https://zonaro.github.io/ShowTheDocs/#/zonaro/ShowTheDocs/main
 ```
 
 - `<owner>`: GitHub username or organization
