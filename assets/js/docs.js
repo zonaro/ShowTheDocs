@@ -218,24 +218,33 @@ window.onresize = function () {
 /* ===== MAIN  ====== */
 const main = (async function () {
 
-
+	// Extrai repo e branch do hash ou dos parâmetros
 	window.repo = getParam('repo') || '';
 	window.basePath = getParam('basePath') || '';
+	window.hash = location.hash.substring(1);
 
-	if (window.repo.isBlank() && window.basePath.isBlank()) {
-		window.hash = location.hash.substring(1);
-		if (hash.isNotBlank() && hash.startsWith('/')) {
-			let parts = hash.split('#');
-			window.repo = parts[0];
-			parts[0] = '';
-			if (parts.length > 1) {
-				window.hash = parts.join("");
+	// Se hash começa com /, tenta extrair repo/branch
+	if (window.hash.isNotBlank() && window.hash.startsWith('/')) {
+		// Exemplo: /HES-Informatica/ColetaLeiteDocs/main
+		let hashParts = window.hash.split('/').filter(x => x.isNotBlank());
+		if (hashParts.length >= 3) {
+			window.repo = `${hashParts[0]}/${hashParts[1]}/${hashParts[2]}`;
+			// Se houver algo após o branch, trata como id/hash interno
+			if (hashParts.length > 3) {
+				window.hash = hashParts.slice(3).join('/');
+			} else {
+				window.hash = '';
 			}
-		} else {
-			location.href = location.leftpart + "#/zonaro/ShowTheDocs/main";
 		}
 	}
 
+	// Se repo ainda está vazio, redireciona para padrão
+	if (window.repo.isBlank() && window.basePath.isBlank()) {
+		location.href = location.leftpart + "#/zonaro/ShowTheDocs/main";
+		return;
+	}
+
+	// Ajusta repo para garantir 3 partes
 	if (window.repo.isNotBlank()) {
 		let parts = window.repo.split("/").filter((x) => x.isNotBlank() && x != "#");
 		switch (parts.length) {
@@ -255,10 +264,10 @@ const main = (async function () {
 	}
 
 	if (window.basePath.isBlank()) {
-		window.basePath = fixRelativePathRepo(window.repo, "content.json");;
+		window.basePath = fixRelativePathRepo(window.repo, "content.json");
 	}
 
-	console.log('Documentation Orign', window.basePath);
+	console.log('Documentation Origin', window.basePath);
 
 	var json = await getJson(window.basePath);
 	console.log('Documentation Data', json);
