@@ -20,7 +20,7 @@ ShowTheDocs is a lightweight, client-side documentation viewer that loads docume
 To load documentation from a public GitHub repository, simply add the `repo` parameter to the URL in the following format:
 
 ```
-https://your-domain.com/index.html#/<owner>/<repo>/<branch>
+https://zonaro.github.io/ShowTheDocs/#/<owner>/<repo>/<branch>
 ```
 
 **Example:**
@@ -34,14 +34,7 @@ https://zonaro.github.io/ShowTheDocs/#/zonaro/ShowTheDocs/main
 - `<branch>`: Branch name (e.g., `main` or `master`)
 
 The app will fetch the `content.json` file and all referenced files from the specified repository and branch using the GitHub public API.
-
-#### Customizing the Entry File
-
-By default, ShowTheDocs looks for `content.json` in the root of the repository. You can specify a different file using the `basePath` parameter:
-
-```
-https://zonaro.github.io/ShowTheDocs/?basePath=https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path-to-json>
-```
+ 
 
 ## content.json Structure
 
