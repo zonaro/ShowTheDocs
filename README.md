@@ -62,7 +62,7 @@ The `content.json` file defines the structure and content of your documentation.
 ```
 
 - `contentfile` can be a Markdown file in the repository or a URL.
-- You can add more fields for customization (see the sample `content.json`).
+- You can add more fields for customization (see the sample [content.json](content.json)).
 
 ---
 
@@ -86,25 +86,3 @@ If the documentation cannot be loaded (e.g., the repository or file does not exi
 - Only public repositories are supported (due to GitHub API restrictions).
 - GitHub API rate limits apply for unauthenticated requests.
 - Private repositories are not supported
-
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----
-
-## Credits
-
-- [Bootstrap](https://getbootstrap.com/)
-- [Highlight.js](https://highlightjs.org/)
-- [SimpleLightbox](https://simplelightbox.com/)
-- [Marked](https://marked.js.org/)
-- [Gumshoe](https://github.com/cferdinandi/gumshoe)
-
----
-
-## Support
-
-For questions, suggestions, or issues, please open an issue on the repository or contact the maintainer.
