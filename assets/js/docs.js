@@ -38,16 +38,70 @@ function fixRelativePathRepo(repo, relative) {
 async function getJson(url) {
 	try {
 		console.log('Getting', url);
+		// Se for um arquivo do GitHub, use a API pública
+		if (url.includes('raw.githubusercontent.com')) {
+			// Converter URL raw para API REST v3
+			// Exemplo: https://raw.githubusercontent.com/owner/repo/branch/path -> https://api.github.com/repos/owner/repo/contents/path?ref=branch
+			const match = url.match(/https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+			if (match) {
+				const owner = match[1];
+				const repo = match[2];
+				const branch = match[3];
+				const path = match[4];
+				const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+				const response = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3.raw' } });
+				if (!response.ok) {
+					throw new Error('Failed to fetch file from GitHub API.');
+				}
+				return await response.json();
+			}
+		}
+		// Fallback para fetch normal
 		return await fetch(url, { mode: 'cors' }).then(async (response) => await response.json().then(async (json) => await json || {}));
 	} catch (error) {
-		return { 'error': error }
+		// Exibir mensagem amigável na página
+		showFriendlyError('Could not load documentation data from GitHub. Please check if the repository or file exists and is public.');
+		return { 'error': error };
 	}
 }
 
 
 async function getText(url, alternateText) {
 	console.log('Getting', url);
-	return await fetch(url, { mode: 'cors' }).then(async (response) => await response.text().then(async (txt) => await txt.ifBlank(alternateText) || ""));
+	try {
+		if (url.includes('raw.githubusercontent.com')) {
+			const match = url.match(/https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+			if (match) {
+				const owner = match[1];
+				const repo = match[2];
+				const branch = match[3];
+				const path = match[4];
+				const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+				const response = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3.raw' } });
+				if (!response.ok) {
+					throw new Error('Failed to fetch file from GitHub API.');
+				}
+				return await response.text();
+			}
+		}
+		return await fetch(url, { mode: 'cors' }).then(async (response) => await response.text().then(async (txt) => await txt.ifBlank(alternateText) || ""));
+	} catch (error) {
+		showFriendlyError('Could not load documentation content from GitHub. Please check if the repository or file exists and is public.');
+		return alternateText || '';
+	}
+}
+
+function showFriendlyError(message) {
+	// Remove spinner se existir
+	const spinner = document.getElementsByClassName("loadingio-spinner-eclipse-jxj4whxfvsh")[0];
+	if (spinner) spinner.remove();
+	// Exibe mensagem de erro amigável
+	let app = document.getElementById('app');
+	if (app) {
+		app.innerHTML = `<div style="color: #b94a48; background: #f2dede; border: 1px solid #eed3d7; padding: 2rem; border-radius: 8px; margin: 2rem auto; max-width: 600px; text-align: center; font-size: 1.2rem;">
+			<strong>Error:</strong><br>${message}
+		</div>`;
+	}
 }
 
 function parseHTML(html) {
