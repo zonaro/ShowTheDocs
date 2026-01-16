@@ -330,9 +330,23 @@ const main = (async function () {
 		for (let index = 0; index < json.content.length; index++) {
 			let item = json.content[index];
 
+
 			if (item.contentfile) {
-				item.contentfile = fixRelativePathRepo(window.repo, item.contentfile);
-				item.content = await getText(item.contentfile, item.content);
+				let filePath = item.contentfile;
+				if (window.repo.isNotBlank()) {
+					filePath = fixRelativePathRepo(window.repo, item.contentfile);
+				} else if (window.basePath.isNotBlank()) {
+					// Usa o mesmo diretório do basePath
+					try {
+						const baseUrl = new URL(window.basePath, location.origin);
+						// Remove o nome do arquivo do basePath
+						const dir = baseUrl.href.substring(0, baseUrl.href.lastIndexOf("/"));
+						filePath = dir + "/" + item.contentfile;
+					} catch (e) {
+						filePath = item.contentfile;
+					}
+				}
+				item.content = await getText(filePath, item.content);
 			}
 
 			if (item.content)
