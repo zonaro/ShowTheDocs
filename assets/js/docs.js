@@ -223,18 +223,33 @@ const main = (async function () {
 	window.basePath = getParam('basePath') || '';
 	window.hash = location.hash.substring(1);
 
-	// Se hash começa com /, tenta extrair repo/branch
-	if (window.hash.isNotBlank() && window.hash.startsWith('/')) {
-		// Exemplo: /HES-Informatica/ColetaLeiteDocs/main
-		let hashParts = window.hash.split('/').filter(x => x.isNotBlank());
-		if (hashParts.length >= 3) {
-			window.repo = `${hashParts[0]}/${hashParts[1]}/${hashParts[2]}`;
-			// Se houver algo após o branch, trata como id/hash interno
-			if (hashParts.length > 3) {
-				window.hash = hashParts.slice(3).join('/');
-			} else {
-				window.hash = '';
+	// Suporte a hash duplo: #/repo/branch#ancora
+	if (window.hash.isNotBlank()) {
+		// Separa repo/branch e ancora interna
+		let hashRepo = window.hash;
+		let hashAnchor = '';
+		if (window.hash.includes('#')) {
+			// Exemplo: #/repo/branch#section-1-1
+			const split = window.hash.split('#');
+			hashRepo = split[0];
+			hashAnchor = split.slice(1).join('#');
+		}
+		if (hashRepo.isNotBlank() && hashRepo.startsWith('/')) {
+			// Exemplo: /HES-Informatica/ColetaLeiteDocs/main
+			let hashParts = hashRepo.split('/').filter(x => x.isNotBlank());
+			if (hashParts.length >= 3) {
+				window.repo = `${hashParts[0]}/${hashParts[1]}/${hashParts[2]}`;
+				// Se houver algo após o branch, trata como id/hash interno
+				if (hashParts.length > 3) {
+					window.hash = hashParts.slice(3).join('/');
+				} else {
+					window.hash = '';
+				}
 			}
+		}
+		// Se havia ancora, usa como window.hash
+		if (hashAnchor.isNotBlank()) {
+			window.hash = hashAnchor;
 		}
 	}
 
