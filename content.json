@@ -13,6 +13,7 @@
     "downloadbutton": "http://github.com/zonaro/ShowTheDocs",
     "viewraw": "See the original file",
     "copydialog": "Press CTRL+C to Copy",
+    "copytoast": "Link copied to clipboard!",
     "content": [
         {
             "id": "1",

@@ -1,3 +1,33 @@
+// Função para copiar link e exibir toast
+function copyLink(el) {
+	var link = el.getAttribute('data-copylink');
+	var toastText = (window.documentationData && window.documentationData.copytoast) ? window.documentationData.copytoast : 'Copiado!';
+	if (navigator.clipboard && window.isSecureContext) {
+		navigator.clipboard.writeText(link).then(function () {
+			showCopyToast(toastText);
+		}, function () {
+			fallbackCopy(link, el.getAttribute('data-text'));
+		});
+	} else {
+		fallbackCopy(link, el.getAttribute('data-text'));
+	}
+}
+
+function showCopyToast(text) {
+	var toast = document.getElementById('copy-toast');
+	if (toast) {
+		toast.textContent = text;
+		toast.style.display = 'block';
+		setTimeout(function () {
+			toast.style.display = 'none';
+		}, 2000);
+	}
+}
+
+function fallbackCopy(link, dialogText) {
+	// Fallback para prompt/confirm
+	window.confirm(dialogText + '\n' + link);
+}
 
 
 
